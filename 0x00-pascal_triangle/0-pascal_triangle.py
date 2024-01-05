@@ -1,21 +1,30 @@
 #!/usr/bin/python3
 """
-define class pascal triangle
+Pascal triangle implementation
 """
 
-def pascal_triangle(n):
+
+def pascal_triangle(n: int):
+    """
+    Pascal triangle
+    """
     if n <= 0:
         return []
 
-    triangle = [[1]]
-    for _ in range(1, n):
-        prev_row = triangle[-1]
-        new_row = [1] + [prev_row[i] + prev_row[i + 1] for i in range(len(prev_row) - 1)] + [1]
-        triangle.append(new_row)
+    if n == 1:
+        return [[1]]
+
+    if n == 2:
+        return [[1], [1, 1]]
+
+    triangle = [[1], [1, 1]]
+
+    for _ in range(2, n):
+        temp = [1, 1]
+        for j in range(0, len(triangle[-1])-1):
+            a = triangle[-1][j]
+            b = triangle[-1][j+1]
+            temp.insert(-1, a + b)
+        triangle.append(temp)
 
     return triangle
-# Test the function
-n = 5
-result = pascal_triangle(n)
-for row in result:
-    print(row)
