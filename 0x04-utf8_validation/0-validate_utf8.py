@@ -2,26 +2,28 @@
 """ UTF-8 Validation"""
 
 def validUTF8(data):
-    a = 0
-
-    while a < len(data):
-        # Determine the number of bytes for the current character
-        if (data[a] & 0b10000000) == 0b00000000:  # 1 byte character
-            length = 1
-        elif (data[a] & 0b11100000) == 0b11000000:  # 2 byte character
-            length = 2
-        elif (data[a] & 0b11110000) == 0b11100000:  # 3 byte character
-            length = 3
-        elif (data[a] & 0b11111000) == 0b11110000:  # 4 byte character
-            length = 4
+    def get_num_byte(byte):
+        if byte & 0x80 == 0:
+            return 1
+        elif byte & 0xE0 == 0xC0:
+            return 2
+        elif byte & 0xF0 == 0xE0:
+            return 3
+        elif byte & 0xF8 == 0xF0:
+            return 4
         else:
-            return False  # Invalid start byte
+            return 0
 
-        # Check for the validity of continuation bytes
-        for b in range(1, length):
-            if a + b >= len(data) or (data[a + b] & 0b11000000) != 0b10000000:
-                return False  # Invalid continuation byte
+    index = 0
+    while index < len(data):
+        num_bytes = get_num_byte(data[index])
 
-        a += length
+        if num_bytes == 0:
+            return False
 
+        index += 1
+        for _ in range(num_bytes - 1):
+            if index >= len(data) or data[index] & 0xC0 != 0x80:
+                return False
+            index += 1
     return True
