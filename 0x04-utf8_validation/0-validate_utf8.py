@@ -1,8 +1,9 @@
-#!usr/bin/python3
-""" UTF-8 Validation"""
+#!/usr/bin/python3
+'''UTF-8 validation'''
+
 
 def validUTF8(data):
-    def get_num_byte(byte):
+    def get_num_bytes(byte):
         if byte & 0x80 == 0:
             return 1
         elif byte & 0xE0 == 0xC0:
@@ -16,7 +17,7 @@ def validUTF8(data):
 
     index = 0
     while index < len(data):
-        num_bytes = get_num_byte(data[index])
+        num_bytes = get_num_bytes(data[index])
 
         if num_bytes == 0:
             return False
@@ -26,4 +27,5 @@ def validUTF8(data):
             if index >= len(data) or data[index] & 0xC0 != 0x80:
                 return False
             index += 1
+
     return True
